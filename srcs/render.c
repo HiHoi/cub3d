@@ -3,28 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   render.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/03/10 16:08:41 by hoslim            #+#    #+#             */
-/*   Updated: 2023/03/11 16:12:35 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/03/13 13:01:50 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/cub3d.h"
-
-int	is_wall(t_game *game, double x, double y)
-{
-	int	xx;
-	int	yy;
-
-	if (x < 0 || x > WINDOW_W || y < 0 || y > WINDOW_H)
-		return (1);
-	xx = floor(x / TILE_SIZE);
-	yy = floor(y / TILE_SIZE);
-	if (game->map[yy][xx] != '0')
-		return (1);
-	return (0);
-}
 
 int	update_player(t_game *game)
 {
@@ -34,8 +20,6 @@ int	update_player(t_game *game)
 	double	new_y;
 	int		movestep;
 
-	turn_direction = 0;
-	walk_direction = 0;
 	if (game->key.left == 1)
 		turn_direction = -1;
 	if (game->key.right == 1)
@@ -56,32 +40,6 @@ int	update_player(t_game *game)
 	return (0);
 }
 
-int	draw_player(t_game *game)
-{
-	int	xx;
-	int	yy;
-	int	row;
-	int	col;
-
-	xx = game->player.location.x;
-	xx = (int)(MINISCALE * xx);
-	yy = game->player.location.y;
-	yy = (int)(MINISCALE * yy);
-	row = -(game->player.thickness) / 2;
-	while (row <= game->player.thickness / 2)
-	{
-		col = -(game->player.thickness) / 2;
-		while (col <= game->player.thickness / 2)
-		{
-			game->img.data[(int)WINDOW_W * \
-			((int)yy + row) + ((int)xx + col)] = 0x0000FF;
-			col++;
-		}
-		row++;
-	}
-	return (0);
-}
-
 void	render_background(t_game *game)
 {
 	int	col;
@@ -97,41 +55,6 @@ void	render_background(t_game *game)
 			col++;
 		}
 		row++;
-	}
-}
-
-int	ft_loop(void *game_void)
-{
-	t_game	*game;
-
-	game = game_void;
-	game->img.data = (int *)mlx_get_data_addr(game->img.img, \
-	&(game->img.bpp), &(game->img.line_size), &(game->img.endian));
-	render_background(game);
-	render_map(game);
-	draw_player(game);
-	draw_ray(game);
-	mlx_put_image_to_window(game->mlx, game->win, game->img.img, 0, 0);
-	return (0);
-}
-
-void	fill_squares(t_img *img, int x, int y, int color)
-{
-	int	i;
-	int	j;
-
-	x = (int)(MINISCALE * x);
-	y = (int)(MINISCALE * y);
-	j = 0;
-	while (j < (int)(MINISCALE * TILE_SIZE))
-	{
-		i = 0;
-		while (i < (int)(MINISCALE * TILE_SIZE))
-		{
-			img->data[(int)(WINDOW_W) * (y + j) + (i + x)] = color;
-			i++;
-		}
-		j++;
 	}
 }
 
@@ -156,6 +79,26 @@ void	render_map(t_game *game)
 		}
 		row++;
 	}
-	// mlx_put_image_to_window(game->mlx, game->win, game->img.img, \
-	// (int)(WINDOW_W * (1 - MINISCALE)), (int)(WINDOW_H * (1 - MINISCALE)));
+}
+
+void	render_3d(t_game *game, int idx)
+{
+	double	correct_length;
+	double	distace_project_plane;
+	int		wall_strip_height;
+	int		wall_top_pixel;
+	int		wall_bottom_pixel;
+
+	correct_length = game->ray.distance * \
+	cos(game->ray.ray_angle - game->player.rotate_angle);
+	distace_project_plane = (WINDOW_W / 2) / tan(FOV / 2);
+	wall_strip_height = (int)((TILE_SIZE / correct_length) \
+	* distace_project_plane);
+	wall_top_pixel = (WINDOW_H / 2) - (wall_strip_height / 2);
+	if (wall_top_pixel < 0)
+		wall_top_pixel = 0;
+	wall_bottom_pixel = (WINDOW_H / 2) + (wall_strip_height / 2);
+	if (wall_bottom_pixel > WINDOW_H)
+		wall_bottom_pixel = WINDOW_H;
+	fill_wall(game, wall_bottom_pixel, wall_top_pixel, idx);
 }

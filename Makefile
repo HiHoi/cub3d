@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+         #
+#    By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 20:01:46 by hoslim            #+#    #+#              #
-#    Updated: 2023/03/11 13:39:56 by hoslim           ###   ########.fr        #
+#    Updated: 2023/03/13 13:07:29 by hoslim           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,9 +20,12 @@ SRCS = \
 		srcs/ft_util2.c\
 		srcs/init.c\
 		srcs/utils.c\
+		srcs/util_free.c\
 		srcs/render.c\
 		srcs/key.c\
-		srcs/ray.c
+		srcs/ray.c\
+		srcs/draw.c\
+		srcs/ray_cal.c
 
 HEADER = ./includes/
 OBJS = $(SRCS:.c=.o)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 20:04:01 by hoslim            #+#    #+#             */
-/*   Updated: 2023/03/12 12:25:57 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/03/13 13:07:19 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@
 
 # define PI 3.141592
 # define RAY_COUNT (WINDOW_W / 1)
+# define WALL_WIDTH 1
 # define DBL_MAX __DBL_MAX__
 # define FOV 60 * (PI / 180.0)
 
@@ -140,12 +141,29 @@ int		goodbye(t_game *game);
 
 void	render_background(t_game *game);
 void	render_map(t_game *game);
+void	render_3d(t_game *game, int idx);
+
 int		ft_loop(void *game_void);
+
 void	draw_ray(t_game *game);
+void	draw_sky(t_game *game, int idx, int wall_top);
+void	draw_land(t_game *game, int idx, int wall_bottom);
+int		draw_player(t_game *game);
+void	fill_squares(t_img *img, int x, int y, int color);
+void	fill_wall(t_game *game, int wall_bottom, int wall_top, int idx);
+
+void	cal_distance(t_game *game, t_dsable_ray *hv);
+void	cal_ray(t_game *game, t_dsable_ray *hv, int horz, int vert);
+void	cal_vert(t_game *game, t_dsable_ray *vert);
+void	cal_horz(t_game *game, t_dsable_ray *horz);
+double	distance_between_point(double x1, double y1, double x2, double y2);
+int		is_wall(t_game *game, double x, double y);
+
 int		update_player(t_game *game);
 
 int		key_press(int keycode, t_game *game);
 
 int		error_return(char *str, int exit);
+void	free_game(t_game *game);
 
 #endif

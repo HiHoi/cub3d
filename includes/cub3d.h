@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cub3d.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 20:04:01 by hoslim            #+#    #+#             */
-/*   Updated: 2023/03/10 21:39:17 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/03/12 12:25:57 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,18 @@
 # define KEY_A 0
 # define KEY_S 1
 # define KEY_D 2
+# define KEY_LEFT	123
+# define KEY_RIGHT	124
+# define KEY_UP 	126
+# define KEY_DOWN	125
 
-# define PI 3.14
-# define RAY_COUNT 121
+# define PI 3.141592
+# define RAY_COUNT (WINDOW_W / 1)
 # define DBL_MAX __DBL_MAX__
+# define FOV 60 * (PI / 180.0)
 
 # define TILE_SIZE 40
-# define MINISCALE 1
+# define MINISCALE 0.25
 # define MAP_ROWS 12
 # define MAP_COLS 20
 
@@ -133,9 +138,11 @@ int		is_wall(t_game *game, double x, double y);
 char	*parsing_map(int fd);
 int		goodbye(t_game *game);
 
+void	render_background(t_game *game);
 void	render_map(t_game *game);
-int		*ft_loop(void *game_void);
+int		ft_loop(void *game_void);
 void	draw_ray(t_game *game);
+int		update_player(t_game *game);
 
 int		key_press(int keycode, t_game *game);
 

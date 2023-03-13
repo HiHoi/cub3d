@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/23 13:04:07 by hoslim            #+#    #+#             */
-/*   Updated: 2023/03/10 20:56:40 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/03/11 12:57:54 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,24 @@ void	init_player(t_player *player)
 	player->turn_speed = 4 * (PI / 180);
 }
 
+double	normalize_angle(double angle)
+{
+	if (angle >= 0)
+	{
+		while (angle >= PI * 2)
+			angle -= PI * 2;
+	}
+	else
+	{
+		while (angle <= 0)
+			angle += PI * 2;
+	}
+	return (angle);
+}
+
 void	init_ray(t_ray *ray, double angle)
 {
-	ray->ray_angle = angle;
+	ray->ray_angle = normalize_angle(angle);
 	ray->wall_hitx = 0;
 	ray->wall_hity = 0;
 	ray->distance = 0;
@@ -76,7 +91,7 @@ t_game	*init_game(char *file)
 	fd = open(file, O_RDONLY, 0644);
 	//파싱 이후 수정 필요한 부분
 	all_line = parsing_map(fd);
-	init_player(&new->player);
+	init_player(&(new->player));
 	new->player_dir.x = -1;
 	new->player_dir.y = 0;
 	new->plane.x = 0;

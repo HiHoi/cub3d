@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+        */
+/*   By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/02/22 20:03:30 by hoslim            #+#    #+#             */
-/*   Updated: 2023/03/10 21:35:51 by hoslim           ###   ########.fr       */
+/*   Updated: 2023/03/11 15:37:35 by hoslim           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,9 @@ int	main(int ac, char **av)
 	game = init_game(av[1]);
 	game->mlx = mlx_init();
 	game->win = mlx_new_window(game->mlx, WINDOW_W, WINDOW_H, "cub3D");
-	game->img.img = mlx_new_image(game->mlx, (int)(MINISCALE * WINDOW_W), \
-	(int)(MINISCALE * WINDOW_H));
-	render_map(game);
-	mlx_hook(game->win, 17, 0, &goodbye, game);
-	mlx_hook(game->win, 2, 1L << 0, &key_press, game);
-	mlx_loop_hook(game->mlx, &ft_loop, game);
+	game->img.img = mlx_new_image(game->mlx, WINDOW_W, WINDOW_H);
+	mlx_hook(game->win, 17, 0, goodbye, game);
+	mlx_hook(game->win, 2, 1L << 0, key_press, game);
+	mlx_loop_hook(game->mlx, ft_loop, game);
 	mlx_loop(game->mlx);
 }

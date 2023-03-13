@@ -3,10 +3,10 @@
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
-#    By: hoslim <hoslim@student.42.fr>              +#+  +:+       +#+         #
+#    By: hoslim <hoslim@student.42seoul.kr>         +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2023/02/22 20:01:46 by hoslim            #+#    #+#              #
-#    Updated: 2023/03/10 21:32:43 by hoslim           ###   ########.fr        #
+#    Updated: 2023/03/11 13:39:56 by hoslim           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,27 +24,33 @@ SRCS = \
 		srcs/key.c\
 		srcs/ray.c
 
-HEADER = includes
+HEADER = ./includes/
 OBJS = $(SRCS:.c=.o)
-CC = gcc
-FLAGS = -Wall -Werror -Wextra -fsanitize=undefined -g
+DEPS = $(SRCS:.c=.d)
+-include $(DEPS)
+
+CC = cc
+FLAGS = -Wall -Werror -Wextra -MMD -MP
 MLX_NAME = mlx
 MLX_DIR = ./mlx
 MLX = $(addprefix $(MLX_DIR)/, libmlx.a)
+TERMCAP = -lncurses
 CLIB = -Lmlx -lmlx -framework OpenGL -framework Appkit -Imlx
+
+.DEFAULT_GOAL := all
 
 all : $(NAME)
 
 %.o : %.c
-	$(CC) $(FLAGS) -I $(HEADER) -I$(MLX_DIR) -c $< -o $@
+	$(CC) $(FLAGS) -I $(HEADER) -I $(MLX_DIR) -c $< -o $@
 
 $(NAME) : $(OBJS)
 	$(MAKE) -C $(MLX_DIR) all
-	$(CC) $(FLAGS) $(CLIB) -o $(NAME) $(OBJS) -L$(MLX_DIR) -l$(MLX_NAME)
+	$(CC) $(FLAGS) -L$(MLX_DIR) -l$(MLX_NAME) $(TERMCAP) $(CLIB) -o $(NAME) $(OBJS)
 	install_name_tool -change libmlx.dylib mlx/libmlx.dylib $(NAME)
 
 clean :
-	rm -rf srcs/*.o srcs/parse/*.o
+	rm -rf srcs/*.o srcs/parse/*.o $(DEPS)
 
 fclean : clean
 	rm -rf $(NAME)
